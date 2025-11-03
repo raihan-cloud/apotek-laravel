@@ -1,3 +1,6 @@
+create database apotek;
+use apotek;
+
 CREATE TABLE `obats` (
   `id_obat` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `kode_obat` VARCHAR(50) NOT NULL,
