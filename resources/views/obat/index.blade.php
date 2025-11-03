@@ -11,6 +11,24 @@
         <div class="alert alert-success text-center">{{ session('success') }}</div>
     @endif
 
+    {{-- Tombol Import & Export --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <form action="{{ route('obat.import') }}" method="POST" enctype="multipart/form-data" class="d-inline">
+                @csrf
+                <input type="file" name="file" class="form-control d-inline w-auto" required>
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                    ⬆️ Import Excel
+                </button>
+            </form>
+        </div>
+        <div>
+            <a href="{{ route('obat.export') }}" class="btn btn-outline-primary btn-sm">
+                ⬇️ Export Excel
+            </a>
+        </div>
+    </div>
+
     {{-- Form Tambah Obat --}}
     <form action="{{ route('obat.store') }}" method="POST" class="mb-4">
         @csrf

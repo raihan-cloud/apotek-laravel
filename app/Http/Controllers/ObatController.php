@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ObatExport;
+use App\Imports\ObatImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Obat;
 use Illuminate\Http\Request;
 
@@ -18,10 +21,11 @@ class ObatController extends Controller
 
     /**
      * Menampilkan form tambah obat.
+     * (Tidak digunakan, karena form sudah di halaman index)
      */
     public function create()
     {
-        return view('obat.create');
+        return redirect()->route('obat.index');
     }
 
     /**
@@ -47,7 +51,7 @@ class ObatController extends Controller
     public function edit($id_obat)
     {
         $obat = Obat::findOrFail($id_obat);
-        return view('obat.edit', compact('obat'));
+        return redirect()->route('obat.index')->with('edit_obat', $obat);
     }
 
     /**
@@ -78,5 +82,27 @@ class ObatController extends Controller
         $obat->delete();
 
         return redirect()->route('obat.index')->with('success', 'Data obat berhasil dihapus');
+    }
+
+    /**
+     * Export data obat ke file Excel.
+     */
+    public function export()
+    {
+        return Excel::download(new ObatExport, 'data-obat.xlsx');
+    }
+
+    /**
+     * Import data obat dari file Excel.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new ObatImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data obat berhasil diimport!');
     }
 }

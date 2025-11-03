@@ -4,6 +4,7 @@
 <div class="card p-4">
     <h3 class="text-center text-success mb-4 fw-bold">👩‍⚕️ Kelola Data Staf</h3>
 
+    {{-- Notifikasi sukses --}}
     @if(session('success'))
         <div class="alert alert-success text-center">
             {{ session('success') }}
@@ -45,10 +46,26 @@
 
     <hr>
 
+    {{-- Tombol Import & Export Excel --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-primary mb-0">📋 Daftar Staf</h5>
+
+        <div class="d-flex gap-2">
+            {{-- Form Import Excel --}}
+            <form action="{{ route('staff.import') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+                @csrf
+                <input type="file" name="file" class="form-control form-control-sm" style="width: 220px;" required>
+                <button type="submit" class="btn btn-success btn-sm fw-semibold">📤 Import Excel</button>
+            </form>
+
+            {{-- Tombol Export Excel --}}
+            <a href="{{ route('staff.export') }}" class="btn btn-primary btn-sm fw-semibold">📥 Export Excel</a>
+        </div>
+    </div>
+
     {{-- Tabel Data Staf --}}
-    <h5 class="fw-bold mb-3 text-primary">📋 Daftar Staf</h5>
     <table class="table table-bordered table-hover align-middle">
-        <thead class="table-success">
+        <thead class="table-success text-center">
             <tr>
                 <th>No</th>
                 <th>Nama</th>
@@ -62,22 +79,19 @@
         <tbody>
             @forelse ($staffs as $staff)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $staff->nama }}</td>
                     <td>{{ $staff->alamat }}</td>
                     <td>{{ $staff->tempat_lahir }}</td>
                     <td>{{ $staff->tanggal_lahir }}</td>
                     <td>{{ $staff->no_hp }}</td>
-                    <td>
+                    <td class="text-center">
                         <a href="{{ route('staff.edit', $staff->id_staff) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
-
-<form action="{{ route('staff.destroy', $staff->id_staff) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm">🗑️ Hapus</button>
-</form>
-
-                        
+                        <form action="{{ route('staff.destroy', $staff->id_staff) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Hapus</button>
+                        </form>
                     </td>
                 </tr>
             @empty
@@ -89,4 +103,3 @@
     </table>
 </div>
 @endsection
-

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Staff;
+use App\Exports\StaffExport;
+use App\Imports\StaffImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
@@ -96,4 +99,20 @@ class StaffController extends Controller
         $staff->delete();
         return redirect()->route('staff.index')->with('success', 'Data staff berhasil dihapus');
     }
+
+    public function export()
+{
+    return Excel::download(new StaffExport, 'data-staf.xlsx');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls'
+    ]);
+
+    Excel::import(new StaffImport, $request->file('file'));
+
+    return redirect()->back()->with('success', 'Data staf berhasil diimport!');
+}
 }

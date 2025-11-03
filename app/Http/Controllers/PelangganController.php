@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
+use App\Exports\PelangganExport;
+use App\Imports\PelangganImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PelangganController extends Controller
 {
@@ -86,4 +89,20 @@ class PelangganController extends Controller
         $pelanggan->delete();
         return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil dihapus');
     }
+
+    public function export()
+{
+    return Excel::download(new PelangganExport, 'data-pelanggan.xlsx');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv,xls'
+    ]);
+
+    Excel::import(new PelangganImport, $request->file('file'));
+
+    return redirect()->back()->with('success', 'Data pelanggan berhasil diimport!');
+}
 }

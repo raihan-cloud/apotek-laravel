@@ -3,7 +3,7 @@
 @section('title', 'Kelola Data Pelanggan')
 
 @section('content')
-<div class="card p-4">
+<div class="card p-4 shadow-sm">
     <h3 class="text-center text-primary mb-4 fw-bold">🧾 Kelola Data Pelanggan</h3>
 
     {{-- Notifikasi --}}
@@ -12,6 +12,23 @@
             {{ session('success') }}
         </div>
     @endif
+
+    {{-- Tombol Import & Export --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        {{-- Tombol Import --}}
+        <form action="{{ route('pelanggan.import') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+            @csrf
+            <input type="file" name="file" accept=".xlsx,.xls,.csv" class="form-control form-control-sm" required>
+            <button type="submit" class="btn btn-success btn-sm fw-semibold">
+                ⬆️ Import Excel
+            </button>
+        </form>
+
+        {{-- Tombol Export --}}
+        <a href="{{ route('pelanggan.export') }}" class="btn btn-primary btn-sm fw-semibold">
+            ⬇️ Export Excel
+        </a>
+    </div>
 
     {{-- Form Tambah Pelanggan --}}
     <form action="{{ route('pelanggan.store') }}" method="POST" class="mb-4">
@@ -44,7 +61,7 @@
     <h5 class="fw-bold mb-3 text-success">📋 Daftar Pelanggan</h5>
     <table class="table table-bordered table-hover align-middle">
         <thead class="table-primary">
-            <tr>
+            <tr class="text-center">
                 <th style="width: 5%">No</th>
                 <th>Nama</th>
                 <th>Alamat</th>
@@ -55,7 +72,7 @@
         <tbody>
             @forelse($pelanggans as $index => $pelanggan)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $pelanggan->nama }}</td>
                     <td>{{ $pelanggan->alamat }}</td>
                     <td>{{ $pelanggan->no_hp }}</td>
